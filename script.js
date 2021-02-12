@@ -9,6 +9,7 @@ const gameboard = (() => {
     board.forEach((element) => {
       const domElement = document.createElement("div");
       domElement.classList.add("gamepiece");
+      domElement.classList.add("hvr-rectangle-out")
       switch (element) {
         case "X":
           domElement.classList.add("x"); break;
