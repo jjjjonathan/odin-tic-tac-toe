@@ -1,0 +1,26 @@
+body {
+  font-family: 'Major Mono Display', monospace;
+}
+
+#gameboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  width: 400px;
+  height: 400px;
+  text-align: center;
+  
+}
+
+.gamepiece {
+  background-color: antiquewhite;
+  font-size: 80px;
+}
+
+.x:after {
+  content: "x";
+}
+
+.o:after {
+  content: "o";
+}
