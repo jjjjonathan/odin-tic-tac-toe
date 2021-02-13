@@ -1,36 +1,39 @@
 const gameboard = (() => {
-  const board = ["X", "O", "X", "O", "O", null, "O", "X", "X"];
+  const board = [null, null, null, null, null, null, null, null, null];
   const render = () => {
     const wrapper = document.getElementById("gameboard-wrapper");
+    wrapper.textContent = "";
     const domBoard = document.createElement("div");
     domBoard.id = "gameboard";
     board.forEach((element, index) => {
       const domElement = document.createElement("div");
       domElement.classList.add("gamepiece");
-      domElement.classList.add("hvr-rectangle-out");
       domElement.dataset.index = index;
       switch (element) {
         case "X":
-          domElement.classList.add("x"); break;
+          domElement.classList.add("x"); 
+          break;
         case "O":
-          domElement.classList.add("o"); break;
+          domElement.classList.add("o"); 
+          break;
         case null:
-          domElement.classList.add("blank"); break;
+          domElement.classList.add("blank");
+          break;
       }
-      domElement.addEventListener("click", gameboard.play);
+      domElement.addEventListener("click", game.handleTileClick);
       domBoard.appendChild(domElement);
       wrapper.appendChild(domBoard);
     })
   };
 
-  const play = (event) => {
-    console.log(event);
-    console.log(game.getCurrentPlayer())
+  const update = (token, tileIndex) => {
+    board[tileIndex] = token;
+    gameboard.render();
   }
 
   return {
     render,
-    play,
+    update,
   };
 })();
 
@@ -99,22 +102,39 @@ const menu = (() => {
 
 const dashboard = (() => {
   const render = () => {
-    const domDashboard = document.getElementById("dashboard");
+    dashboard.clear();
 
-    
+    const domDashboard = document.getElementById("dashboard");
+    const header = document.createElement("h2");
+    header.textContent = "it's your turn,";
+
+    const currentPlayer = document.createElement("p");
+    currentPlayer.textContent = game.getCurrentPlayerName().toLowerCase();
+
+    domDashboard.appendChild(header);
+    domDashboard.appendChild(currentPlayer);
+  }
+
+  const clear = () => {
+    const domDashboard = document.getElementById("dashboard");
+    domDashboard.textContent = "";
   }
 
   return {
     render,
+    clear,
   };
 
 })();
 
-const Player = (name) => {
+const Player = (name, token) => {
   const getName = () => name;
+  
 
-  const play = (event) => {
-    console.log(event);
+  const play = (tile) => {
+    gameboard.update(token, tile);
+    game.switchCurrentPlayer();
+    dashboard.render()
   };
 
   return {
@@ -124,7 +144,8 @@ const Player = (name) => {
 };
 
 const game = (() => {
-  let currentPlayer = "X";
+  let currentPlayerSymbol = "X";
+  let playerX, playerO;
   
   const begin = () => {
     menu.getPlayerNames();
@@ -132,21 +153,47 @@ const game = (() => {
 
   const play = () => {
     const playerNames = menu.returnValues();
-    const playerX = Player(playerNames[0])
-    const playerO = Player(playerNames[1])
-
-    console.log(playerX.getName())
-    console.log(playerO.getName())
+    playerX = Player(playerNames[0], "X")
+    playerO = Player(playerNames[1], "O")
 
     gameboard.render();
+    dashboard.render();
   }
 
-  const getCurrentPlayer = () => currentPlayer;
+  const getCurrentPlayerSymbol = () => currentPlayerSymbol;
+
+  const getCurrentPlayerName = () => {
+    if (currentPlayerSymbol === "X") {
+      return playerX.getName()
+    } else {
+      return playerO.getName()
+    }
+  }
+
+  const switchCurrentPlayer = () => {
+    if (currentPlayerSymbol === "X") {
+      currentPlayerSymbol = "O"
+    } else {
+      currentPlayerSymbol = "X"
+    }
+  }
+
+  const handleTileClick = (event) => {
+    const clickedTile = event.target.dataset.index;
+    if (currentPlayerSymbol === "X") {
+      playerX.play(clickedTile);
+    } else {
+      playerO.play(clickedTile);
+    }
+  }
 
   return {
     begin,
     play,
-    getCurrentPlayer,
+    getCurrentPlayerSymbol,
+    getCurrentPlayerName,
+    switchCurrentPlayer,
+    handleTileClick,
   }
 })();
 
