@@ -132,9 +132,19 @@ const Player = (name, token) => {
   
 
   const play = (tile) => {
-    gameboard.update(token, tile);
-    game.switchCurrentPlayer();
-    dashboard.render()
+    const tileElement = document.querySelector(`div[data-index="${tile}"]`);
+    const tileIsBlank = [...tileElement.classList].includes("blank");
+
+    if (tileIsBlank) {
+      gameboard.update(token, tile);
+      game.switchCurrentPlayer();
+      dashboard.render()
+    } else {
+      tileElement.classList.remove("animate__animated", "animate__shakeX");
+      setTimeout(() => {
+        tileElement.classList.add("animate__animated", "animate__shakeX");
+      }, 20)
+    }
   };
 
   return {

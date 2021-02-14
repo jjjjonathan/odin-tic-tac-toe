@@ -43,6 +43,10 @@ h1 {
   content: "o";
 }
 
+#menu {
+  text-align: center;
+}
+
 #dashboard {
   text-align: center;
 }
