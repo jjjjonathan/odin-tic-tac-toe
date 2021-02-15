@@ -42,8 +42,34 @@ const gameboard = (() => {
     gameboard.render();
   }
 
-  const isGameOver = () => {
+  const isGameOver = (lastToken) => {
+    let allTokenLocations = [];
+    let winningSolution;
+
+    for (let i in board) {
+      if (board[i] === lastToken) {
+        allTokenLocations.push(parseInt(i))
+      }
+    }
     
+    const is = solutions.some(solution => {
+      let matches = 0;
+      for (let i in solution) {
+        for (let j in allTokenLocations) {
+          if (solution[i] === allTokenLocations[j]) matches++;
+        }
+      }
+      if (matches === 3) {
+        winningSolution = solution;
+        return true;
+      };
+    })
+
+    return {
+      is,
+      winner: lastToken,
+      winningSolution
+    }
   }
 
   return {
@@ -155,7 +181,10 @@ const Player = (name, token) => {
       gameboard.update(token, tile);
       game.switchCurrentPlayer();
       dashboard.render()
-      gameboard.isGameOver();
+      
+      if (gameboard.isGameOver(token).is) {
+        console.log(gameboard.isGameOver(token))
+      }
     } else {
       tileElement.classList.remove("animate__animated", "animate__shakeX");
       setTimeout(() => {
