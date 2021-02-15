@@ -1,5 +1,16 @@
 const gameboard = (() => {
   const board = [null, null, null, null, null, null, null, null, null];
+  const solutions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+
   const render = () => {
     const wrapper = document.getElementById("gameboard-wrapper");
     wrapper.textContent = "";
@@ -31,9 +42,14 @@ const gameboard = (() => {
     gameboard.render();
   }
 
+  const isGameOver = () => {
+    
+  }
+
   return {
     render,
     update,
+    isGameOver,
   };
 })();
 
@@ -139,6 +155,7 @@ const Player = (name, token) => {
       gameboard.update(token, tile);
       game.switchCurrentPlayer();
       dashboard.render()
+      gameboard.isGameOver();
     } else {
       tileElement.classList.remove("animate__animated", "animate__shakeX");
       setTimeout(() => {
