@@ -157,6 +157,25 @@ const dashboard = (() => {
     domDashboard.appendChild(currentPlayer);
   }
 
+  const gameOver = (gameOverObj) => {
+    dashboard.clear();
+
+    const domDashboard = document.getElementById("dashboard");
+    const header = document.createElement("h2");
+    header.textContent = "GAMe oVeR";
+
+    const winningPlayer = document.createElement("p");
+    winningPlayer.textContent = game.getPlayerNameBySymbol(gameOverObj.winner).toLowerCase();
+
+    const winText = document.createElement("p");
+    winText.id = "subtitle";
+    winText.textContent = "wins!"
+
+    domDashboard.appendChild(header);
+    domDashboard.appendChild(winningPlayer);
+    domDashboard.appendChild(winText);
+  }
+
   const clear = () => {
     const domDashboard = document.getElementById("dashboard");
     domDashboard.textContent = "";
@@ -164,6 +183,7 @@ const dashboard = (() => {
 
   return {
     render,
+    gameOver,
     clear,
   };
 
@@ -181,9 +201,11 @@ const Player = (name, token) => {
       gameboard.update(token, tile);
       game.switchCurrentPlayer();
       dashboard.render()
+
+      const gameOverObj = gameboard.isGameOver(token);
       
-      if (gameboard.isGameOver(token).is) {
-        console.log(gameboard.isGameOver(token))
+      if (gameOverObj.is) {
+        dashboard.gameOver(gameOverObj);
       }
     } else {
       tileElement.classList.remove("animate__animated", "animate__shakeX");
@@ -226,6 +248,14 @@ const game = (() => {
     }
   }
 
+  const getPlayerNameBySymbol = (symbol) => {
+    if (symbol === "X") {
+      return playerX.getName()
+    } else {
+      return playerO.getName()
+    }
+  }
+
   const switchCurrentPlayer = () => {
     if (currentPlayerSymbol === "X") {
       currentPlayerSymbol = "O"
@@ -248,6 +278,7 @@ const game = (() => {
     play,
     getCurrentPlayerSymbol,
     getCurrentPlayerName,
+    getPlayerNameBySymbol,
     switchCurrentPlayer,
     handleTileClick,
   }
