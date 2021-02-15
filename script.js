@@ -171,9 +171,21 @@ const dashboard = (() => {
     winText.id = "subtitle";
     winText.textContent = "wins!"
 
+    const newGameSamePlayers = document.createElement("button");
+    newGameSamePlayers.id = "new-game-same-players";
+    newGameSamePlayers.textContent = "New game with same players";
+    newGameSamePlayers.addEventListener("click", game.restartWithSamePlayers);
+
+    const newGameNewPlayers = document.createElement("button");
+    newGameNewPlayers.id = "new-game-new-players";
+    newGameNewPlayers.textContent = "New game with new players";
+    newGameNewPlayers.addEventListener("click", game.restartWithNewPlayers);
+
     domDashboard.appendChild(header);
     domDashboard.appendChild(winningPlayer);
     domDashboard.appendChild(winText);
+    domDashboard.appendChild(newGameSamePlayers);
+    domDashboard.appendChild(newGameNewPlayers);
   }
 
   const clear = () => {
@@ -273,6 +285,14 @@ const game = (() => {
     }
   }
 
+  const restartWithSamePlayers = () => {
+
+  }
+
+  const restartWithNewPlayers = () => {
+
+  }
+
   return {
     begin,
     play,
@@ -281,6 +301,8 @@ const game = (() => {
     getPlayerNameBySymbol,
     switchCurrentPlayer,
     handleTileClick,
+    restartWithSamePlayers,
+    restartWithNewPlayers,
   }
 })();
 
