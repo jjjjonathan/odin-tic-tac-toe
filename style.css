@@ -5,13 +5,25 @@
 }
 
 body {
-  font-family: 'Major Mono Display', monospace;
+  font-family: 'Quicksand', sans-serif;
   background: var(--main-bg-color);
   color: var(--text-color);
 }
 
 h1 {
   text-align: center;
+  font-size: 2.5em;
+  font-weight: 500;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+p {
+  margin-top: 0;
+  font-weight: 700;
 }
 
 #gameboard {
@@ -32,12 +44,12 @@ h1 {
 }
 
 .gamepiece {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 80px;
+  display: fixed;
+  font-size: 6em;
   width: 100%;
   height: 100%;
+  font-weight: 700;
+  padding-bottom: 50%,
 }
 
 .x:after {
@@ -53,11 +65,19 @@ h1 {
 }
 
 #dashboard {
+  margin-top: 40px;
   text-align: center;
 }
 
 #dashboard p {
-  font-size: 30px;
+  font-size: 2.5em;
+  margin-top: -10px;
+}
+
+#subtitle {
+  font-size: 1.5em !important;
+  margin-top: -30px !important;
+  font-weight: 500 !important;
 }
 
 .three-in-a-row {

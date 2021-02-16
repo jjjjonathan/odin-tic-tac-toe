@@ -182,10 +182,10 @@ const dashboard = (() => {
 
     const domDashboard = document.getElementById("dashboard");
     const header = document.createElement("h2");
-    header.textContent = "it's your turn,";
+    header.textContent = "It's your turn,";
 
     const currentPlayer = document.createElement("p");
-    currentPlayer.textContent = game.getCurrentPlayerName().toLowerCase();
+    currentPlayer.textContent = game.getCurrentPlayerName();
 
     domDashboard.appendChild(header);
     domDashboard.appendChild(currentPlayer);
@@ -196,12 +196,10 @@ const dashboard = (() => {
 
     const domDashboard = document.getElementById("dashboard");
     const header = document.createElement("h2");
-    header.textContent = "GAMe oVeR";
+    header.textContent = "Game over!";
 
     const winningPlayer = document.createElement("p");
-    winningPlayer.textContent = game
-      .getPlayerNameBySymbol(gameOverObj.winner)
-      .toLowerCase();
+    winningPlayer.textContent = game.getPlayerNameBySymbol(gameOverObj.winner)
 
     const winText = document.createElement("p");
     winText.id = "subtitle";
@@ -328,6 +326,7 @@ const game = (() => {
   const restartWithNewPlayers = () => {
     gameboard.deleteBoard();
     dashboard.clear();
+    if (currentPlayerSymbol === "O") switchCurrentPlayer();
     game.begin();
   };
 
