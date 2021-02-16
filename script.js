@@ -72,10 +72,39 @@ const gameboard = (() => {
     }
   }
 
+  const clear = () => {
+    for (let i in board) {
+      board[i] = null;
+    }
+    gameboard.render();
+  }
+
+  const deleteBoard = () => {
+    const wrapper = document.getElementById("gameboard-wrapper");
+    wrapper.textContent = "";
+  }
+
+  const gameOver = (gameOverObj) => {
+    const allTiles = document.querySelectorAll(".gamepiece");
+    allTiles.forEach((tile, index) => {
+      tile.removeEventListener("click", game.handleTileClick);
+
+      if (gameOverObj.winningSolution.includes(index)) {
+        tile.classList.add("three-in-a-row");
+      } else if (board[index] === "X" || board[index] === "O") {
+        tile.classList.add("losing-tile");
+      }
+    })
+    console.log(gameOverObj.winningSolution)
+  }
+
   return {
     render,
     update,
     isGameOver,
+    clear,
+    deleteBoard,
+    gameOver,
   };
 })();
 
@@ -204,7 +233,6 @@ const dashboard = (() => {
 const Player = (name, token) => {
   const getName = () => name;
   
-
   const play = (tile) => {
     const tileElement = document.querySelector(`div[data-index="${tile}"]`);
     const tileIsBlank = [...tileElement.classList].includes("blank");
@@ -218,6 +246,7 @@ const Player = (name, token) => {
       
       if (gameOverObj.is) {
         dashboard.gameOver(gameOverObj);
+        gameboard.gameOver(gameOverObj);
       }
     } else {
       tileElement.classList.remove("animate__animated", "animate__shakeX");
@@ -286,11 +315,13 @@ const game = (() => {
   }
 
   const restartWithSamePlayers = () => {
-
+    gameboard.clear();
   }
 
   const restartWithNewPlayers = () => {
-
+    gameboard.deleteBoard();
+    dashboard.clear();
+    game.begin();
   }
 
   return {
