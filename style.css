@@ -55,7 +55,37 @@ h1 {
   font-size: 30px;
 }
 
+.three-in-a-row {
+  animation: scale-up 0.8s ease-out both;
+}
 
+.losing-tile {
+  animation: scale-down 0.8s ease-out both;
+}
+
+
+
+@keyframes scale-up {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-down {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+}
 
 
 

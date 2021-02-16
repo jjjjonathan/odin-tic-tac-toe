@@ -8,7 +8,7 @@ const gameboard = (() => {
     [1, 4, 7],
     [2, 5, 8],
     [0, 4, 8],
-    [2, 4, 6]
+    [2, 4, 6],
   ];
 
   const render = () => {
@@ -22,10 +22,10 @@ const gameboard = (() => {
       domElement.dataset.index = index;
       switch (element) {
         case "X":
-          domElement.classList.add("x"); 
+          domElement.classList.add("x");
           break;
         case "O":
-          domElement.classList.add("o"); 
+          domElement.classList.add("o");
           break;
         case null:
           domElement.classList.add("blank");
@@ -34,13 +34,13 @@ const gameboard = (() => {
       domElement.addEventListener("click", game.handleTileClick);
       domBoard.appendChild(domElement);
       wrapper.appendChild(domBoard);
-    })
+    });
   };
 
   const update = (token, tileIndex) => {
     board[tileIndex] = token;
     gameboard.render();
-  }
+  };
 
   const isGameOver = (lastToken) => {
     let allTokenLocations = [];
@@ -48,11 +48,11 @@ const gameboard = (() => {
 
     for (let i in board) {
       if (board[i] === lastToken) {
-        allTokenLocations.push(parseInt(i))
+        allTokenLocations.push(parseInt(i));
       }
     }
-    
-    const is = solutions.some(solution => {
+
+    const is = solutions.some((solution) => {
       let matches = 0;
       for (let i in solution) {
         for (let j in allTokenLocations) {
@@ -62,27 +62,28 @@ const gameboard = (() => {
       if (matches === 3) {
         winningSolution = solution;
         return true;
-      };
-    })
+      }
+    });
 
     return {
       is,
       winner: lastToken,
-      winningSolution
-    }
-  }
+      winningSolution,
+    };
+  };
 
   const clear = () => {
     for (let i in board) {
       board[i] = null;
     }
     gameboard.render();
-  }
+  };
 
   const deleteBoard = () => {
+    gameboard.clear();
     const wrapper = document.getElementById("gameboard-wrapper");
     wrapper.textContent = "";
-  }
+  };
 
   const gameOver = (gameOverObj) => {
     const allTiles = document.querySelectorAll(".gamepiece");
@@ -94,9 +95,8 @@ const gameboard = (() => {
       } else if (board[index] === "X" || board[index] === "O") {
         tile.classList.add("losing-tile");
       }
-    })
-    console.log(gameOverObj.winningSolution)
-  }
+    });
+  };
 
   return {
     render,
@@ -110,7 +110,6 @@ const gameboard = (() => {
 
 const menu = (() => {
   const render = (() => {
-
     const textBox = (id, value) => {
       const domMenu = document.getElementById("menu");
       const domTextBox = document.createElement("input");
@@ -118,40 +117,41 @@ const menu = (() => {
       domTextBox.name = id;
       domTextBox.value = value;
       domMenu.appendChild(domTextBox);
-    }
+    };
 
     const button = (id, value) => {
       const domMenu = document.getElementById("menu");
       const domButton = document.createElement("button");
       domButton.id = id;
       domButton.textContent = value;
-      domButton.addEventListener("click", game.play);
+      domButton.addEventListener("click", () => {
+        game.play(menu.returnValues())
+      });
       domMenu.appendChild(domButton);
-    }
+    };
 
     return {
       textBox,
       button,
-    }
-
+    };
   })();
 
   const clear = () => {
     const domMenu = document.getElementById("menu");
     domMenu.textContent = "";
-  }
+  };
 
   const returnValues = () => {
-    const inputElements = document.querySelectorAll("input")
+    const inputElements = document.querySelectorAll("input");
     let inputValues = [];
 
-    inputElements.forEach(element => {
+    inputElements.forEach((element) => {
       inputValues.push(element.value);
-    })
-    
+    });
+
     menu.clear();
     return inputValues;
-  }
+  };
 
   const getPlayerNames = () => {
     const xId = "player-x";
@@ -161,7 +161,7 @@ const menu = (() => {
     menu.render.textBox(xId, "Player X");
     menu.render.textBox(oId, "Player O");
     menu.render.button(submitId, "Play!");
-  }
+  };
 
   return {
     render,
@@ -184,7 +184,7 @@ const dashboard = (() => {
 
     domDashboard.appendChild(header);
     domDashboard.appendChild(currentPlayer);
-  }
+  };
 
   const gameOver = (gameOverObj) => {
     dashboard.clear();
@@ -194,11 +194,13 @@ const dashboard = (() => {
     header.textContent = "GAMe oVeR";
 
     const winningPlayer = document.createElement("p");
-    winningPlayer.textContent = game.getPlayerNameBySymbol(gameOverObj.winner).toLowerCase();
+    winningPlayer.textContent = game
+      .getPlayerNameBySymbol(gameOverObj.winner)
+      .toLowerCase();
 
     const winText = document.createElement("p");
     winText.id = "subtitle";
-    winText.textContent = "wins!"
+    winText.textContent = "wins!";
 
     const newGameSamePlayers = document.createElement("button");
     newGameSamePlayers.id = "new-game-same-players";
@@ -215,24 +217,23 @@ const dashboard = (() => {
     domDashboard.appendChild(winText);
     domDashboard.appendChild(newGameSamePlayers);
     domDashboard.appendChild(newGameNewPlayers);
-  }
+  };
 
   const clear = () => {
     const domDashboard = document.getElementById("dashboard");
     domDashboard.textContent = "";
-  }
+  };
 
   return {
     render,
     gameOver,
     clear,
   };
-
 })();
 
 const Player = (name, token) => {
   const getName = () => name;
-  
+
   const play = (tile) => {
     const tileElement = document.querySelector(`div[data-index="${tile}"]`);
     const tileIsBlank = [...tileElement.classList].includes("blank");
@@ -240,10 +241,10 @@ const Player = (name, token) => {
     if (tileIsBlank) {
       gameboard.update(token, tile);
       game.switchCurrentPlayer();
-      dashboard.render()
+      dashboard.render();
 
       const gameOverObj = gameboard.isGameOver(token);
-      
+
       if (gameOverObj.is) {
         dashboard.gameOver(gameOverObj);
         gameboard.gameOver(gameOverObj);
@@ -252,58 +253,57 @@ const Player = (name, token) => {
       tileElement.classList.remove("animate__animated", "animate__shakeX");
       setTimeout(() => {
         tileElement.classList.add("animate__animated", "animate__shakeX");
-      }, 20)
+      }, 20);
     }
   };
 
   return {
     getName,
     play,
-  }
+  };
 };
 
 const game = (() => {
   let currentPlayerSymbol = "X";
   let playerX, playerO;
-  
+
   const begin = () => {
     menu.getPlayerNames();
-  }
+  };
 
-  const play = () => {
-    const playerNames = menu.returnValues();
-    playerX = Player(playerNames[0], "X")
-    playerO = Player(playerNames[1], "O")
+  const play = (playerNames) => {
+    playerX = Player(playerNames[0], "X");
+    playerO = Player(playerNames[1], "O");
 
     gameboard.render();
     dashboard.render();
-  }
+  };
 
   const getCurrentPlayerSymbol = () => currentPlayerSymbol;
 
   const getCurrentPlayerName = () => {
     if (currentPlayerSymbol === "X") {
-      return playerX.getName()
+      return playerX.getName();
     } else {
-      return playerO.getName()
+      return playerO.getName();
     }
-  }
+  };
 
   const getPlayerNameBySymbol = (symbol) => {
     if (symbol === "X") {
-      return playerX.getName()
+      return playerX.getName();
     } else {
-      return playerO.getName()
+      return playerO.getName();
     }
-  }
+  };
 
   const switchCurrentPlayer = () => {
     if (currentPlayerSymbol === "X") {
-      currentPlayerSymbol = "O"
+      currentPlayerSymbol = "O";
     } else {
-      currentPlayerSymbol = "X"
+      currentPlayerSymbol = "X";
     }
-  }
+  };
 
   const handleTileClick = (event) => {
     const clickedTile = event.target.dataset.index;
@@ -312,17 +312,19 @@ const game = (() => {
     } else {
       playerO.play(clickedTile);
     }
-  }
+  };
 
   const restartWithSamePlayers = () => {
     gameboard.clear();
-  }
+    if (currentPlayerSymbol === "O") switchCurrentPlayer();
+    game.play([playerX.getName(), playerO.getName()])
+  };
 
   const restartWithNewPlayers = () => {
     gameboard.deleteBoard();
     dashboard.clear();
     game.begin();
-  }
+  };
 
   return {
     begin,
@@ -334,7 +336,7 @@ const game = (() => {
     handleTileClick,
     restartWithSamePlayers,
     restartWithNewPlayers,
-  }
+  };
 })();
 
 document.addEventListener("DOMContentLoaded", game.begin);
