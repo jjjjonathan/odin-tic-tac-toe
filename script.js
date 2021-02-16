@@ -17,6 +17,9 @@ const gameboard = (() => {
     const domBoard = document.createElement("div");
     domBoard.id = "gameboard";
     board.forEach((element, index) => {
+      const individualWrapper = document.createElement("div");
+      individualWrapper.classList.add("gamepiece-wrapper");
+
       const domElement = document.createElement("div");
       domElement.classList.add("gamepiece");
       domElement.dataset.index = index;
@@ -32,9 +35,11 @@ const gameboard = (() => {
           break;
       }
       domElement.addEventListener("click", game.handleTileClick);
-      domBoard.appendChild(domElement);
-      wrapper.appendChild(domBoard);
+      individualWrapper.appendChild(domElement);
+      domBoard.appendChild(individualWrapper);
+      
     });
+    wrapper.appendChild(domBoard);
   };
 
   const update = (token, tileIndex) => {
