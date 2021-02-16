@@ -89,6 +89,43 @@ p {
 }
 
 
+input {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  margin: 10px auto;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 16px;
+  border-width: 1px;
+  border-color: var(--line-color);
+  background-color: #FFFFFF;
+  color: #000000;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+input:focus {
+  outline: none;
+  border: 1px solid var(--text-color)
+}
+
+button {
+  font-family: inherit;
+  display: block;
+  margin: 10px auto;
+  font-weight: 600;
+  padding: 8px;
+  border: 1px solid var(--text-color);
+  border-radius: 8px;
+  background: none;
+}
+
+button:active {
+  outline: none;
+}
+
+
 
 @keyframes scale-up {
   0% {

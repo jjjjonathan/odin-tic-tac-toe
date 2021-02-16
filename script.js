@@ -57,7 +57,9 @@ const gameboard = (() => {
       }
     }
 
-    const is = solutions.some((solution) => {
+    const isFull = !board.includes(null);
+
+    const is = isFull || (solutions.some((solution) => {
       let matches = 0;
       for (let i in solution) {
         for (let j in allTokenLocations) {
@@ -68,10 +70,11 @@ const gameboard = (() => {
         winningSolution = solution;
         return true;
       }
-    });
+    }));
 
     return {
       is,
+      isTie: isFull,
       winner: lastToken,
       winningSolution,
     };
@@ -95,10 +98,12 @@ const gameboard = (() => {
     allTiles.forEach((tile, index) => {
       tile.removeEventListener("click", game.handleTileClick);
 
-      if (gameOverObj.winningSolution.includes(index)) {
-        tile.classList.add("three-in-a-row");
-      } else if (board[index] === "X" || board[index] === "O") {
-        tile.classList.add("losing-tile");
+      if (!gameOverObj.isTie) {
+        if (gameOverObj.winningSolution.includes(index)) {
+          tile.classList.add("three-in-a-row");
+        } else if (board[index] === "X" || board[index] === "O") {
+          tile.classList.add("losing-tile");
+        }
       }
     });
   };
@@ -115,6 +120,14 @@ const gameboard = (() => {
 
 const menu = (() => {
   const render = (() => {
+    const header = (id, value) => {
+      const domMenu = document.getElementById("menu");
+      const domHeader = document.createElement("h2");
+      domHeader.id = id;
+      domHeader.textContent = value;
+      domMenu.appendChild(domHeader);
+    };
+
     const textBox = (id, value) => {
       const domMenu = document.getElementById("menu");
       const domTextBox = document.createElement("input");
@@ -136,6 +149,7 @@ const menu = (() => {
     };
 
     return {
+      header,
       textBox,
       button,
     };
@@ -163,6 +177,7 @@ const menu = (() => {
     const oId = "player-o";
     const submitId = "submit-players";
 
+    menu.render.header("menu-header", "Enter player names:")
     menu.render.textBox(xId, "Player X");
     menu.render.textBox(oId, "Player O");
     menu.render.button(submitId, "Play!");
@@ -177,6 +192,25 @@ const menu = (() => {
 })();
 
 const dashboard = (() => {
+  const newGameButtons = (restartText) => {
+    const buttonContainer = document.createElement("div");
+
+    const newGameSamePlayers = document.createElement("button");
+    newGameSamePlayers.id = "new-game-same-players";
+    newGameSamePlayers.textContent = restartText + " with same players";
+    newGameSamePlayers.addEventListener("click", game.restartWithSamePlayers);
+
+    const newGameNewPlayers = document.createElement("button");
+    newGameNewPlayers.id = "new-game-new-players";
+    newGameNewPlayers.textContent = restartText + " with new players";
+    newGameNewPlayers.addEventListener("click", game.restartWithNewPlayers);
+
+    buttonContainer.appendChild(newGameSamePlayers);
+    buttonContainer.appendChild(newGameNewPlayers);
+
+    return buttonContainer;
+  }
+
   const render = () => {
     dashboard.clear();
 
@@ -189,6 +223,7 @@ const dashboard = (() => {
 
     domDashboard.appendChild(header);
     domDashboard.appendChild(currentPlayer);
+    domDashboard.appendChild(dashboard.newGameButtons("Restart"));
   };
 
   const gameOver = (gameOverObj) => {
@@ -199,27 +234,21 @@ const dashboard = (() => {
     header.textContent = "Game over!";
 
     const winningPlayer = document.createElement("p");
-    winningPlayer.textContent = game.getPlayerNameBySymbol(gameOverObj.winner)
+    if (!gameOverObj.isTie) {
+      winningPlayer.textContent = game.getPlayerNameBySymbol(gameOverObj.winner)
+    } else {
+      winningPlayer.textContent = "It's a tie!"
+    }
 
     const winText = document.createElement("p");
     winText.id = "subtitle";
     winText.textContent = "wins!";
 
-    const newGameSamePlayers = document.createElement("button");
-    newGameSamePlayers.id = "new-game-same-players";
-    newGameSamePlayers.textContent = "New game with same players";
-    newGameSamePlayers.addEventListener("click", game.restartWithSamePlayers);
-
-    const newGameNewPlayers = document.createElement("button");
-    newGameNewPlayers.id = "new-game-new-players";
-    newGameNewPlayers.textContent = "New game with new players";
-    newGameNewPlayers.addEventListener("click", game.restartWithNewPlayers);
-
     domDashboard.appendChild(header);
     domDashboard.appendChild(winningPlayer);
-    domDashboard.appendChild(winText);
-    domDashboard.appendChild(newGameSamePlayers);
-    domDashboard.appendChild(newGameNewPlayers);
+    if (!gameOverObj.isTie) domDashboard.appendChild(winText);
+
+    domDashboard.appendChild(dashboard.newGameButtons("New game"));
   };
 
   const clear = () => {
@@ -228,6 +257,7 @@ const dashboard = (() => {
   };
 
   return {
+    newGameButtons,
     render,
     gameOver,
     clear,
