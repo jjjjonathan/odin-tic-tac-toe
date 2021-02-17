@@ -59,7 +59,7 @@ const gameboard = (() => {
 
     const isFull = !board.includes(null);
 
-    const is = isFull || (solutions.some((solution) => {
+    const won = solutions.some((solution) => {
       let matches = 0;
       for (let i in solution) {
         for (let j in allTokenLocations) {
@@ -70,11 +70,14 @@ const gameboard = (() => {
         winningSolution = solution;
         return true;
       }
-    }));
+    });
+
+    const is = isFull || won;
+
 
     return {
       is,
-      isTie: isFull,
+      won,
       winner: lastToken,
       winningSolution,
     };
@@ -98,7 +101,7 @@ const gameboard = (() => {
     allTiles.forEach((tile, index) => {
       tile.removeEventListener("click", game.handleTileClick);
 
-      if (!gameOverObj.isTie) {
+      if (gameOverObj.won) {
         if (gameOverObj.winningSolution.includes(index)) {
           tile.classList.add("three-in-a-row");
         } else if (board[index] === "X" || board[index] === "O") {
@@ -235,7 +238,7 @@ const dashboard = (() => {
     header.textContent = "Game over!";
 
     const winningPlayer = document.createElement("p");
-    if (!gameOverObj.isTie) {
+    if (gameOverObj.won) {
       winningPlayer.textContent = game.getPlayerNameBySymbol(gameOverObj.winner)
     } else {
       winningPlayer.textContent = "It's a tie!"
@@ -247,7 +250,7 @@ const dashboard = (() => {
 
     domDashboard.appendChild(header);
     domDashboard.appendChild(winningPlayer);
-    if (!gameOverObj.isTie) domDashboard.appendChild(winText);
+    if (gameOverObj.won) domDashboard.appendChild(winText);
 
     domDashboard.appendChild(dashboard.newGameButtons("New game"));
   };
