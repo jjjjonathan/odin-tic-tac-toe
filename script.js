@@ -140,6 +140,7 @@ const menu = (() => {
     const button = (id, value) => {
       const domMenu = document.getElementById("menu");
       const domButton = document.createElement("button");
+      domButton.type = "submit";
       domButton.id = id;
       domButton.textContent = value;
       domButton.addEventListener("click", () => {
