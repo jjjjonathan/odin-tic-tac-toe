@@ -37,7 +37,6 @@ const gameboard = (() => {
       domElement.addEventListener("click", game.handleTileClick);
       individualWrapper.appendChild(domElement);
       domBoard.appendChild(individualWrapper);
-      
     });
     wrapper.appendChild(domBoard);
   };
@@ -73,7 +72,6 @@ const gameboard = (() => {
     });
 
     const is = isFull || won;
-
 
     return {
       is,
@@ -147,7 +145,7 @@ const menu = (() => {
       domButton.id = id;
       domButton.textContent = value;
       domButton.addEventListener("click", () => {
-        game.play(menu.returnValues())
+        game.play(menu.returnValues());
       });
       domMenu.appendChild(domButton);
     };
@@ -181,7 +179,7 @@ const menu = (() => {
     const oId = "player-o";
     const submitId = "submit-players";
 
-    menu.render.header("menu-header", "Enter player names:")
+    menu.render.header("menu-header", "Enter player names:");
     menu.render.textBox(xId, "Player X");
     menu.render.textBox(oId, "Player O");
     menu.render.button(submitId, "Play!");
@@ -213,7 +211,7 @@ const dashboard = (() => {
     buttonContainer.appendChild(newGameNewPlayers);
 
     return buttonContainer;
-  }
+  };
 
   const render = () => {
     dashboard.clear();
@@ -239,9 +237,11 @@ const dashboard = (() => {
 
     const winningPlayer = document.createElement("p");
     if (gameOverObj.won) {
-      winningPlayer.textContent = game.getPlayerNameBySymbol(gameOverObj.winner)
+      winningPlayer.textContent = game.getPlayerNameBySymbol(
+        gameOverObj.winner
+      );
     } else {
-      winningPlayer.textContent = "It's a tie!"
+      winningPlayer.textContent = "It's a tie!";
     }
 
     const winText = document.createElement("p");
@@ -354,7 +354,7 @@ const game = (() => {
   const restartWithSamePlayers = () => {
     gameboard.clear();
     if (currentPlayerSymbol === "O") switchCurrentPlayer();
-    game.play([playerX.getName(), playerO.getName()])
+    game.play([playerX.getName(), playerO.getName()]);
   };
 
   const restartWithNewPlayers = () => {
