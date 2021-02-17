@@ -119,6 +119,7 @@ button {
   border: 1px solid var(--text-color);
   border-radius: 8px;
   background: none;
+  font-size: 1em;
 }
 
 button:active {
